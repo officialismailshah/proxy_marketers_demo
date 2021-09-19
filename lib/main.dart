@@ -4,7 +4,6 @@ import 'package:proxy_marketers_demo/translations.g.dart/locale_keys.g.dart';
 
 import 'Chat/chats.dart';
 import 'Product/product.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'generated/lib/translations.g.dart';
 

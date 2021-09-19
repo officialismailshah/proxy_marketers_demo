@@ -12,13 +12,15 @@ class _UploadPageState extends State<UploadPage> {
   TextEditingController brandName = TextEditingController();
   TextEditingController soldBy = TextEditingController();
   TextEditingController amazonLink = TextEditingController();
-  String? selected;
+  TextEditingController dropDown = TextEditingController();
+  bool isSelected = false;
+  var _currencies = [
+    "Food",
+    "Transport",
+  ];
+  // String? selected;
   @override
   Widget build(BuildContext context) {
-    var _currencies = [
-      "Food",
-      "Transport",
-    ];
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -64,7 +66,23 @@ class _UploadPageState extends State<UploadPage> {
               hintText: 'Enter Amazon Link',
               controller: amazonLink,
             ),
-            DropDownField(currencies: _currencies, selected: selected!)
+            DropDownField(
+              currencies: _currencies,
+              controller: dropDown,
+            ),
+            Row(
+              children: [
+                Checkbox(
+                    value: isSelected,
+                    activeColor: Colors.blue,
+                    onChanged: (val) {
+                      setState(() {
+                        isSelected = val!;
+                      });
+                    }),
+                Text('Text')
+              ],
+            )
             // TextFieldForCustomer(''),
             // TextFieldForCustomer(),
             // TextFieldForCustomer(),
@@ -75,46 +93,43 @@ class _UploadPageState extends State<UploadPage> {
   }
 }
 
-class DropDownField extends StatelessWidget {
-void set isSeletced(val){
-
-}
-  final String selected;
+class DropDownField extends StatefulWidget {
   final List<String> currencies;
-  const DropDownField({
+  final TextEditingController controller;
+
+  DropDownField({
     Key? key,
     required this.currencies,
-    required this.selected,
+    required this.controller,
   }) : super(key: key);
 
   @override
+  State<DropDownField> createState() => _DropDownFieldState();
+}
+
+class _DropDownFieldState extends State<DropDownField> {
+  @override
   Widget build(BuildContext context) {
-    return FormField<String>(
-      builder: (FormFieldState<String> state) {
-        return InputDecorator(
-          decoration: InputDecoration(
-              errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-          // isEmpty: _currentSelectedValue == '',
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              hint: Text('Please Select Option'),
-              value: selected,
-              isDense: true,
-              onChanged: (newValue) {
-                selected = newValue;
-              },
-              items: currencies.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-        );
-      },
+    // String? selected;
+    return TextField(
+      // textAlign: TextAlign.center,
+      controller: widget.controller,
+      decoration: InputDecoration(
+        hintText: 'Please Select One Option',
+        isDense: true,
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        suffixIcon: PopupMenuButton<String>(
+          icon: const Icon(Icons.arrow_drop_down),
+          onSelected: (String value) {
+            widget.controller.text = value;
+          },
+          itemBuilder: (BuildContext context) {
+            return widget.currencies.map<PopupMenuItem<String>>((String value) {
+              return new PopupMenuItem(child: new Text(value), value: value);
+            }).toList();
+          },
+        ),
+      ),
     );
   }
 }
